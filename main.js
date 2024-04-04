@@ -1,7 +1,7 @@
 function fetchGitHubIssues(callback) {
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://api.github.com/repos/hex-dragon/PCL2/issues');
-  xhr.onload = function() {
+  xhr.open('GET', 'https://api.github.com/repos/Hex-Dragon/PCL2/issues');
+  xhr.onload = function () {
     if (xhr.status === 200) {
       const issues = JSON.parse(xhr.responseText);
       const labelsCount = {};
@@ -20,8 +20,31 @@ function fetchGitHubIssues(callback) {
 
 // 使用 Chart.js 生成条形统计图
 function generateChart(labelsCount) {
-  const ctx = document.getElementById('issuesChart').getContext('2d');
-  const chart = new Chart(ctx, {
+  const ctxType = document.getElementById('issueTypeChart').getContext('2d');
+  const _ = new Chart(ctxType, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(labelsCount),
+      datasets: [{
+        label: 'Issue 数量',
+        data: Object.values(labelsCount),
+        backgroundColor: 'rgba(0, 123, 255, 0.5)',
+        borderColor: 'rgba(0, 123, 255, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }]
+      }
+    }
+  });
+  const ctx = document.getElementById('issueTypeChart').getContext('2d');
+  const chart2 = new Chart(ctxType, {
     type: 'bar',
     data: {
       labels: Object.keys(labelsCount),
@@ -44,6 +67,6 @@ function generateChart(labelsCount) {
     }
   });
 }
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   fetchGitHubIssues(generateChart);
 });
