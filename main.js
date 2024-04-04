@@ -1,24 +1,23 @@
 function fetchAllIssues(url, issues = [], callback) {
   fetch(url)
-    .then(response => {
+    .then(async response => {
       if (!response.ok) {
         throw new Error('Network response was not ok: ' + response.statusText);
       }
-      // 解析link头部，用于分页
+      // 解析 link 头部，用于分页
       const linkHeader = response.headers.get('link');
       let nextPageLink = null;
       if (linkHeader) {
         const links = linkHeader.split(',');
         nextPageLink = links.find(link => link.includes('rel="next"')).split(';')[0].trim().slice(1, -1);
       }
-      return response.json().then(data => {
-        const combinedIssues = issues.concat(data);
-        if (nextPageLink) {
-          return fetchAllIssues(nextPageLink, combinedIssues, callback);
-        } else {
-          callback(combinedIssues);
-        }
-      });
+      const data = await response.json();
+      const combinedIssues = issues.concat(data);
+      if (nextPageLink) {
+        return fetchAllIssues(nextPageLink, combinedIssues, callback);
+      } else {
+        callback(combinedIssues);
+      }
     })
     .catch(error => console.error('Fetching issues failed:', error));
 }
