@@ -58,6 +58,6 @@ function handleIssuesData(issues) {
   generateChart(labelsCount);
 }
 document.addEventListener('DOMContentLoaded', () => {
-  const issuesUrl = 'https://api.github.com/repos/Hex-Dragon/PCL2/issues?per_page=100';
+  const issuesUrl = 'https://api.github.com/repos/Hex-Dragon/PCL2/issues?per_page=100&state=all';
   fetchAllIssues(issuesUrl, [], handleIssuesData);
 });
