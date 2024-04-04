@@ -1,6 +1,6 @@
 function fetchGitHubIssues(callback) {
   const xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://api.github.com/repos/hex-dragon/PCL2/issues');
+  xhr.open('GET', 'https://api.github.com/repos/Hex-Dragon/PCL2/issues');
   xhr.onload = function() {
     if (xhr.status === 200) {
       const issues = JSON.parse(xhr.responseText);
