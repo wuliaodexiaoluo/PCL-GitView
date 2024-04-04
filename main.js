@@ -12,13 +12,13 @@ function fetchGitHubIssues(callback) {
       });
       callback(labelsCount);
     } else {
-      console.error('请求GitHub数据失败：', xhr.status);
+      console.error('请求 GitHub 数据失败：', xhr.status);
     }
   };
   xhr.send();
 }
 
-// 使用Chart.js生成条形统计图
+// 使用 Chart.js 生成条形统计图
 function generateChart(labelsCount) {
   const ctx = document.getElementById('issuesChart').getContext('2d');
   const chart = new Chart(ctx, {
@@ -26,7 +26,7 @@ function generateChart(labelsCount) {
     data: {
       labels: Object.keys(labelsCount),
       datasets: [{
-        label: 'Issue数量',
+        label: 'Issue 数量',
         data: Object.values(labelsCount),
         backgroundColor: 'rgba(0, 123, 255, 0.5)',
         borderColor: 'rgba(0, 123, 255, 1)',
