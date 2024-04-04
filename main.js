@@ -1,28 +1,29 @@
 function fetchAllIssues(url, issues = [], callback) {
   fetch(url)
-    .then(async response => {
+    .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok: ' + response.statusText);
       }
-      // 解析 link 头部，用于分页
+      // 解析link头部，用于分页
       const linkHeader = response.headers.get('link');
       let nextPageLink = null;
       if (linkHeader) {
         const links = linkHeader.split(',');
         nextPageLink = links.find(link => link.includes('rel="next"')).split(';')[0].trim().slice(1, -1);
       }
-      const data = await response.json();
-      const combinedIssues = issues.concat(data);
-      if (nextPageLink) {
-        return fetchAllIssues(nextPageLink, combinedIssues, callback);
-      } else {
-        callback(combinedIssues);
-      }
+      return response.json().then(data => {
+        const combinedIssues = issues.concat(data);
+        if (nextPageLink) {
+          return fetchAllIssues(nextPageLink, combinedIssues, callback);
+        } else {
+          callback(combinedIssues);
+        }
+      });
     })
     .catch(error => console.error('Fetching issues failed:', error));
 }
 
-// 使用 Chart.js 生成条形统计图
+// 使用Chart.js生成条形统计图
 function generateChart(labelsCount) {
   const ctx = document.getElementById('issuesChart').getContext('2d');
   new Chart(ctx, {
@@ -30,7 +31,7 @@ function generateChart(labelsCount) {
     data: {
       labels: Object.keys(labelsCount),
       datasets: [{
-        label: 'Issue 数量',
+        label: 'Issue数量',
         data: Object.values(labelsCount),
         backgroundColor: 'rgba(0, 123, 255, 0.5)',
         borderColor: 'rgba(0, 123, 255, 1)',
@@ -57,6 +58,6 @@ function handleIssuesData(issues) {
   generateChart(labelsCount);
 }
 document.addEventListener('DOMContentLoaded', () => {
-  const issuesUrl = 'https://api.github.com/repos/Hex-Dragon/PCL2/issues?per_page=100&state=all';
+  const issuesUrl = 'https://api.github.com/repos/Hex-Dragon/PCL2/issues?per_page=100';
   fetchAllIssues(issuesUrl, [], handleIssuesData);
 });
