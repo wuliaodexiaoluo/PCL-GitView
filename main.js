@@ -1,27 +1,32 @@
-function fetchGitHubIssues(callback) {
-  const xhr = new XMLHttpRequest();
-  xhr.open('GET', 'https://api.github.com/repos/Hex-Dragon/PCL2/issues?state=all');
-  xhr.onload = function() {
-    if (xhr.status === 200) {
-      const issues = JSON.parse(xhr.responseText);
-      const labelsCount = {};
-      issues.forEach(issue => {
-        issue.labels.forEach(label => {
-          labelsCount[label.name] = (labelsCount[label.name] || 0) + 1;
-        });
+function fetchAllIssues(url, issues = [], callback) {
+  fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.statusText);
+      }
+      // 解析link头部，用于分页
+      const linkHeader = response.headers.get('link');
+      let nextPageLink = null;
+      if (linkHeader) {
+        const links = linkHeader.split(',');
+        nextPageLink = links.find(link => link.includes('rel="next"')).split(';')[0].trim().slice(1, -1);
+      }
+      return response.json().then(data => {
+        const combinedIssues = issues.concat(data);
+        if (nextPageLink) {
+          return fetchAllIssues(nextPageLink, combinedIssues, callback);
+        } else {
+          callback(combinedIssues);
+        }
       });
-      callback(labelsCount);
-    } else {
-      console.error('请求GitHub数据失败：', xhr.status);
-    }
-  };
-  xhr.send();
+    })
+    .catch(error => console.error('Fetching issues failed:', error));
 }
 
 // 使用Chart.js生成条形统计图
 function generateChart(labelsCount) {
   const ctx = document.getElementById('issuesChart').getContext('2d');
-  const chart = new Chart(ctx, {
+  new Chart(ctx, {
     type: 'bar',
     data: {
       labels: Object.keys(labelsCount),
@@ -35,15 +40,24 @@ function generateChart(labelsCount) {
     },
     options: {
       scales: {
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-          }
-        }]
+        y: {
+          beginAtZero: true
+        }
       }
     }
   });
 }
-document.addEventListener('DOMContentLoaded', function() {
-  fetchGitHubIssues(generateChart);
+
+function handleIssuesData(issues) {
+  const labelsCount = {};
+  issues.forEach(issue => {
+    issue.labels.forEach(label => {
+      labelsCount[label.name] = (labelsCount[label.name] || 0) + 1;
+    });
+  });
+  generateChart(labelsCount);
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const issuesUrl = 'https://api.github.com/repos/Hex-Dragon/PCL2/issues?per_page=100';
+  fetchAllIssues(issuesUrl, [], handleIssuesData);
 });
