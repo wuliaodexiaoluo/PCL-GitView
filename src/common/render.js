@@ -25,14 +25,16 @@ export const genIssuesData = (issues) => {
         重要: labelsCount["重要"] ?? 0,
         推迟: labelsCount["推迟"] ?? 0,
         第三方: labelsCount["第三方"] ?? 0,
+        需要社区帮助: labelsCount["需要社区帮助"] ?? 0,
+        需要社区复现: labelsCount["需要社区复现"] ?? 0,
+    };
+    const barChart2Data = {
         完成: labelsCount["完成"] ?? 0,
         忽略: labelsCount["忽略"] ?? 0,
         重复: labelsCount["重复"] ?? 0,
         "拒绝 / 放弃": labelsCount["拒绝 / 放弃"] ?? 0,
-        需要社区帮助: labelsCount["需要社区帮助"] ?? 0,
-        需要社区复现: labelsCount["需要社区复现"] ?? 0,
     };
-    return [pieChartData, barChartData];
+    return [pieChartData, barChartData, barChart2Data];
 };
 
 export const genChart11 = (pieChartData) => {
@@ -59,10 +61,10 @@ export const genChart11 = (pieChartData) => {
             ],
         },
     });
-    return pieChart
+    return pieChart;
 };
 
-export const genChart12 = (barChartData) => {
+export const genChart121 = (barChartData) => {
     const ctx = document.getElementById("totalView");
     const barChart = new Chart(ctx, {
         type: "bar",
@@ -75,32 +77,66 @@ export const genChart12 = (barChartData) => {
                     backgroundColor: [
                         `rgba(${csscolor("--yellow-6")}, 0.5)`,
                         `rgba(${csscolor("--yellow-6")}, 0.5)`,
-                        `rgba(${csscolor("--perple-6")}, 0.5)`,
+                        `rgba(${csscolor("--purple-6")}, 0.5)`,
                         `rgba(${csscolor("--arcoblue-6")}, 0.5)`,
                         `rgba(${csscolor("--magenta-6")}, 0.5)`,
                         `rgba(${csscolor("--gray-6")}, 0.5)`,
                         `rgba(${csscolor("--gray-6")}, 0.5)`,
-                        `rgba(${csscolor("--green-6")}, 0.5)`,
-                        `rgba(${csscolor("--gray-6")}, 0.5)`,
-                        `rgba(${csscolor("--gray-6")}, 0.5)`,
-                        `rgba(${csscolor("--red-6")}, 0.5)`,
                         `rgba(${csscolor("--magenta-6")}, 0.5)`,
                         `rgba(${csscolor("--magenta-6")}, 0.5)`,
                     ],
                     borderColor: [
                         `rgba(${csscolor("--yellow-8")}, 1)`,
                         `rgba(${csscolor("--yellow-8")}, 1)`,
-                        `rgba(${csscolor("--perple-8")}, 1)`,
+                        `rgba(${csscolor("--purple-8")}, 1)`,
                         `rgba(${csscolor("--arcoblue-8")}, 1)`,
                         `rgba(${csscolor("--magenta-8")}, 1)`,
                         `rgba(${csscolor("--gray-8")}, 1)`,
                         `rgba(${csscolor("--gray-8")}, 1)`,
+                        `rgba(${csscolor("--magenta-8")}, 1)`,
+                        `rgba(${csscolor("--magenta-8")}, 1)`,
+                    ],
+                    borderWidth: 1,
+                },
+            ],
+        },
+        options: {
+            plugins: {
+                legend: {
+                    display: false,
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        },
+    });
+    return barChart;
+};
+
+export const genChart122 = (barChartData) => {
+    const ctx = document.getElementById("cancelView");
+    const barChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: Object.keys(barChartData),
+            datasets: [
+                {
+                    label: "Issue 量",
+                    data: Object.values(barChartData),
+                    backgroundColor: [
+                        `rgba(${csscolor("--green-6")}, 0.5)`,
+                        `rgba(${csscolor("--gray-6")}, 0.5)`,
+                        `rgba(${csscolor("--gray-6")}, 0.5)`,
+                        `rgba(${csscolor("--red-6")}, 0.5)`,
+                    ],
+                    borderColor: [
                         `rgba(${csscolor("--green-8")}, 1)`,
                         `rgba(${csscolor("--gray-8")}, 1)`,
                         `rgba(${csscolor("--gray-8")}, 1)`,
                         `rgba(${csscolor("--red-8")}, 1)`,
-                        `rgba(${csscolor("--magenta-8")}, 1)`,
-                        `rgba(${csscolor("--magenta-8")}, 1)`,
                     ],
                     borderWidth: 1,
                 },

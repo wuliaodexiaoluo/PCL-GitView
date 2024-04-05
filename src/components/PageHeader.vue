@@ -37,7 +37,7 @@ setInterval(
             <template #title>PCL Github Info Dashboard </template>
             <template #subtitle>
                 <a-space>
-                    <span>v1.0.0</span>
+                    <span>v1.0.1</span>
                     <a-tag color="orange" size="small"> Beta </a-tag>
                 </a-space>
             </template>
