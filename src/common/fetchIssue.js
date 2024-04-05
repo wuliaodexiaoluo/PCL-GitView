@@ -1,10 +1,12 @@
 export const fetchAllIssues = () => {
     return new Promise((resolve, reject) => {
+        const pat = process.env.VUE_APP_GITHUB_PAT
+        console.log(pat) // TODO: Remove this [Debug Line]
         const fetchIssues = (url, issues) => {
             fetch(url, {
                 headers: {
                     Authorization:
-                        `token ${process.env.VUE_APP_GITHUB_PAT}`,
+                        `token ${pat}`,
                 },
             })
                 .then(async (response) => {
