@@ -43,7 +43,7 @@ jobs:
           APIKEY: ${{ secrets.SERVER_PAT }}
         run: |
           npm install
-          npm run build
+          APIKEY=$APIKEY npm run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

@@ -11,5 +11,8 @@ export default defineConfig({
             "@": fileURLToPath(new URL("./src", import.meta.url)),
         },
     },
-    base: './'
+    base: './',
+    define: {
+        'process.env.VUE_APP_GITHUB_PAT': JSON.stringify(process.env.APIKEY)
+    }
 });
