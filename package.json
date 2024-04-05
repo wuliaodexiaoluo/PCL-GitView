@@ -1,0 +1,21 @@
+{
+    "name": "pcl2-issuedashboard",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite --host 0.0.0.0",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "dependencies": {
+        "chart.js": "^4.4.2",
+        "less": "^4.2.0",
+        "vue": "^3.3.11"
+    },
+    "devDependencies": {
+        "@arco-design/web-vue": "^2.55.1",
+        "@vitejs/plugin-vue": "^4.5.2",
+        "vite": "^5.0.10"
+    }
+}
