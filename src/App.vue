@@ -1,7 +1,7 @@
 <script setup>
 import PageHeader from "./components/PageHeader.vue";
 import { fetchAllIssues } from "./common/fetchIssue";
-import { genIssuesData, genChart11, genChart12 } from "./common/render.js";
+import { genIssuesData, genChart11, genChart121, genChart122 } from "./common/render.js";
 import { nextTick, ref, reactive } from "vue";
 
 const components = {
@@ -13,26 +13,28 @@ const isLoading = ref(true);
 const chartData = reactive({
     pieChartData: {},
     barChartData: {},
+    barChart2Data: {},
 });
 
 const charts = reactive({
     pieChart: null,
     barChart: null,
+    barChart2: null,
 });
 
 localStorage.setItem("7d5f3327-btnDisabled", true);
 
 nextTick(() => {
     const c11c = document.getElementById("view-11");
-    const c12c = document.getElementById("view-12");
+    const c12c = document.getElementById("view-12-c");
     const acb1 = document.getElementsByClassName("arco-card-body");
     const v = acb1[0].clientHeight;
     c11c.style.height = `${v}px`;
-    c12c.style.height = `${v}px`;
+    c12c.style.height = `${v - 100}px`;
     for (let i = 1; i < acb1.length; i++) {
-        acb1[i].style.display = "flex"
-        acb1[i].style.justifyContent = "center"
-        acb1[i].style.alignItems = "center"
+        acb1[i].style.display = "flex";
+        acb1[i].style.justifyContent = "center";
+        acb1[i].style.alignItems = "center";
     }
     gen();
 });
@@ -41,10 +43,14 @@ const gen = () => {
     isLoading.value = true;
     fetchAllIssues()
         .then((data) => {
-            [chartData.pieChartData, chartData.barChartData] =
-                genIssuesData(data);
+            [
+                chartData.pieChartData,
+                chartData.barChartData,
+                chartData.barChart2Data,
+            ] = genIssuesData(data);
             charts.pieChart = genChart11(chartData.pieChartData);
-            charts.barChart = genChart12(chartData.barChartData);
+            charts.barChart = genChart121(chartData.barChartData);
+            charts.barChart2 = genChart122(chartData.barChart2Data);
             isLoading.value = false;
             setTimeout(() => {
                 localStorage.setItem("7d5f3327-btnDisabled", false);
@@ -58,7 +64,8 @@ const gen = () => {
 const norefetchReload = () => {
     nextTick(() => {
         charts.pieChart = genChart11(chartData.pieChartData);
-        charts.barChart = genChart12(chartData.barChartData);
+        charts.barChart = genChart121(chartData.barChartData);
+        charts.barChart2 = genChart122(chartData.barChart2Data);
         isLoading.value = false;
         setTimeout(() => {
             localStorage.setItem("7d5f3327-btnDisabled", false);
@@ -72,6 +79,8 @@ const handleReload = () => {
     charts.pieChart = null;
     charts.barChart.destroy();
     charts.barChart = null;
+    charts.barChart2.destroy();
+    charts.barChart2 = null;
     gen();
 };
 </script>
@@ -95,7 +104,10 @@ const handleReload = () => {
                     <canvas id="typeView"></canvas>
                 </div>
                 <div id="view-12">
-                    <canvas id="totalView"></canvas>
+                    <div id="view-12-c" style="display: flex; gap: 0 8px;">
+                        <canvas id="totalView"></canvas>
+                        <canvas id="cancelView"></canvas>
+                    </div>
                 </div>
             </div>
         </a-card>
@@ -137,7 +149,7 @@ const handleReload = () => {
         margin-bottom: 20px;
         div#card1container {
             display: grid;
-            grid-template-columns: 386px 1fr;
+            grid-template-columns: 330px 1fr;
             grid-template-rows: 1fr;
             gap: 20px 0;
             grid-template-areas: "view11 view12";
@@ -150,6 +162,7 @@ const handleReload = () => {
                 grid-area: view12;
                 display: flex;
                 justify-content: center;
+                align-items: center;
             }
         }
     }
