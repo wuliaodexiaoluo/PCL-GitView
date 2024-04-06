@@ -127,7 +127,7 @@ const handleReload = () => {
                 title="是鸽子在说话嘛?"
                 subtitle="这部分还没开发好！咕~ 咕~ 咕~"></a-result>
         </a-card>
-        <a-card class="Card3" title="这里放啥好呢？">
+        <a-card class="Card3" title="open Issue 变化趋势">
             <a-result
                 title="是鸽子在说话嘛?"
                 subtitle="这部分还没开发好！咕~ 咕~ 咕~"></a-result>
