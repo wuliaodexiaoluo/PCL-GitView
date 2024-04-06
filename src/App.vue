@@ -1,7 +1,12 @@
 <script setup>
 import PageHeader from "./components/PageHeader.vue";
 import { fetchAllIssues } from "./common/fetchIssue";
-import { genIssuesData, genChart11, genChart121, genChart122 } from "./common/render.js";
+import {
+    genIssuesData,
+    genChart11,
+    genChart121,
+    genChart122,
+} from "./common/render.js";
 import { nextTick, ref, reactive } from "vue";
 
 const components = {
@@ -25,12 +30,9 @@ const charts = reactive({
 localStorage.setItem("7d5f3327-btnDisabled", true);
 
 nextTick(() => {
-    const c11c = document.getElementById("view-11");
-    const c12c = document.getElementById("view-12-c");
+    const c11 = document.getElementById("view-11");
     const acb1 = document.getElementsByClassName("arco-card-body");
-    const v = acb1[0].clientHeight;
-    c11c.style.height = `${v}px`;
-    c12c.style.height = `${v - 100}px`;
+    c11.style.height = `${acb1[0].clientHeight}px`;
     for (let i = 1; i < acb1.length; i++) {
         acb1[i].style.display = "flex";
         acb1[i].style.justifyContent = "center";
@@ -61,7 +63,14 @@ const gen = () => {
         });
 };
 
-const norefetchReload = () => {
+const noRefetchReload = () => {
+    localStorage.setItem("7d5f3327-btnDisabled", true);
+    charts.pieChart.destroy();
+    charts.pieChart = null;
+    charts.barChart.destroy();
+    charts.barChart = null;
+    charts.barChart2.destroy();
+    charts.barChart2 = null;
     nextTick(() => {
         charts.pieChart = genChart11(chartData.pieChartData);
         charts.barChart = genChart121(chartData.barChartData);
@@ -104,8 +113,10 @@ const handleReload = () => {
                     <canvas id="typeView"></canvas>
                 </div>
                 <div id="view-12">
-                    <div id="view-12-c" style="display: flex; gap: 0 8px;">
+                    <div id="view-12-1">
                         <canvas id="totalView"></canvas>
+                    </div>
+                    <div id="view-12-2">
                         <canvas id="cancelView"></canvas>
                     </div>
                 </div>
@@ -149,9 +160,9 @@ const handleReload = () => {
         margin-bottom: 20px;
         div#card1container {
             display: grid;
-            grid-template-columns: 330px 1fr;
+            grid-template-columns: 1fr 3fr;
             grid-template-rows: 1fr;
-            gap: 20px 0;
+            gap: 0 16px;
             grid-template-areas: "view11 view12";
             div#view-11 {
                 grid-area: view11;
@@ -160,9 +171,19 @@ const handleReload = () => {
             }
             div#view-12 {
                 grid-area: view12;
-                display: flex;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 1fr;
+                grid-template-areas: "view121 view122";
                 justify-content: center;
                 align-items: center;
+                gap: 16px;
+                div#view-12-1 {
+                    grid-area: view121;
+                }
+                div#view-12-2 {
+                    grid-area: view122;
+                }
             }
         }
     }
