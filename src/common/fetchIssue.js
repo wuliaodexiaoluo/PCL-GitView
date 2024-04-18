@@ -1,6 +1,31 @@
+function getQueryParam(name, url) {
+    const urlParams = new URLSearchParams(url.split('?')[1]);
+    return urlParams.get(name);
+}
+function fetchOne(url) {
+    return new Promise((resolve, reject) => {
+        fetch(url, {
+            headers: {
+                Authorization:
+                    `token ${process.env.VUE_APP_GITHUB_PAT || import.meta.env.VITE_GITHUB_PAT}`,
+            },
+        })
+            .then(async (response) => {
+                if (!response.ok) {
+                    reject({
+                        status: response.status,
+                        message: "Error on fetch data",
+                    });
+                }
+                const data = await response.json();
+                resolve(data);
+            })
+    }
+    )
+}
 export const fetchAllIssues = () => {
     return new Promise((resolve, reject) => {
-        const fetchIssues = (url, issues) => {
+        const fetchIssues = (url) => {
             fetch(url, {
                 headers: {
                     Authorization:
@@ -16,27 +41,34 @@ export const fetchAllIssues = () => {
                     }
                     // Prase Link Header, For Paging
                     const linkHeader = response.headers.get("link");
-                    let nextPageLink = null;
-                    if (linkHeader) {
-                        const links = linkHeader.split(",");
-                        const linkContainNext = links.find((link) =>
-                            link.includes('rel="next"')
-                        );
-                        if (linkContainNext != undefined) {
-                            // Verify whether there is the nextpage url, if yes, prase the url
-                            nextPageLink = linkContainNext
-                                .split(";")[0]
-                                .trim()
-                                .slice(1, -1);
-                        }
+                    const linkLast = linkHeader.split(",").find((link) =>
+                        link.includes('rel="last"')
+                    );
+                    const lastPageLink = linkLast
+                        .split(";")[0]
+                        .trim()
+                        .slice(1, -1);
+                    const lastPage = getQueryParam("page", lastPageLink);
+                    console.debug(lastPage);
+                    let combinedIssues = await response.json();
+                    const promises = [];
+                    for (let i = 1; i <= Number(lastPage); i++) {
+                        const promise = fetchOne(
+                            lastPageLink.replace(`page=${lastPage}`, `page=${i}`))
+                            .then(data => {
+                                combinedIssues = combinedIssues.concat(data);
+                            })
+                        promises.push(promise);
                     }
-                    const data = await response.json();
-                    const combinedIssues = issues.concat(data);
-                    if (nextPageLink) {
-                        fetchIssues(nextPageLink, combinedIssues);
-                    } else {
+                    Promise.all(promises).then(() => {
+                        console.log("请求已完成。");
                         resolve(combinedIssues);
-                    }
+                    }).catch((error) => {
+                        reject({
+                            status: 0,
+                            message: "请求时出错：" + error.message,
+                        })
+                    })
                 })
                 .catch((error) => {
                     reject({
