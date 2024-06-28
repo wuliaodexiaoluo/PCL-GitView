@@ -7,7 +7,7 @@ const btnDisabled = ref(false);
 
 const handleOpenGithubRepo = () => {
     window.open(
-        "https://github.com/PCL-Community/PCL2-issue-data-viewer",
+        "https://github.com/PCL-Community/PCL-GitView",
         "_blank"
     );
 };
@@ -34,7 +34,7 @@ setInterval(
                     <a-breadcrumb-item></a-breadcrumb-item>
                 </a-breadcrumb>
             </template>
-            <template #title>PCL Github Info Dashboard </template>
+            <template #title>PCL-GitView </template>
             <template #subtitle>
                 <a-space>
                     <span>v1.0.3</span>
