@@ -18,16 +18,19 @@ export const genIssuesData = (issues) => {
         新功能: labelsCount["· 新功能"] ?? 0,
     };
     const barChartData = {
-        待处理: labelsCount["待处理"] ?? 0,
+        等待确认: labelsCount["等待确认"] ?? 0,
         处理中: labelsCount["处理中"] ?? 0,
         等待反馈者: labelsCount["等待反馈者"] ?? 0,
         投票中: labelsCount["投票中"] ?? 0,
-        重要: labelsCount["重要"] ?? 0,
         破坏性改动: labelsCount["破坏性改动"] ?? 0,
-        推迟: labelsCount["推迟"] ?? 0,
+        🟦 推迟: labelsCount["🟦 推迟"] ?? 0,
         第三方: labelsCount["第三方"] ?? 0,
         需要社区帮助: labelsCount["需要社区帮助"] ?? 0,
         需要社区复现: labelsCount["需要社区复现"] ?? 0,
+        🟥 高: labelsCount["🟥 高"] ?? 0,
+        🟨 中: labelsCount["🟨 中"] ?? 0,
+        🟩 低: labelsCount["🟩 低"] ?? 0,
+        🟪 极高: labelsCount["🟪 极高"] ?? 0,
     };
     const barChart2Data = {
         完成: labelsCount["完成"] ?? 0,
