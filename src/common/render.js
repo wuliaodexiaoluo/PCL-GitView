@@ -27,10 +27,10 @@ export const genIssuesData = (issues) => {
         第三方: labelsCount["第三方"] ?? 0,
         需要社区帮助: labelsCount["需要社区帮助"] ?? 0,
         需要社区复现: labelsCount["需要社区复现"] ?? 0,
-        \U0001F7E54 高: labelsCount["🟥 高"] ?? 0,
-        \U0001F7E85 中: labelsCount["🟨 中"] ?? 0,
-        \U0001F7E9 低: labelsCount["🟩 低"] ?? 0,
-        \U0001F7EA3 极高: labelsCount["🟪 极高"] ?? 0,
+        优先级：高: labelsCount["🟥 高"] ?? 0,
+        优先级：中: labelsCount["🟨 中"] ?? 0,
+        优先级：低: labelsCount["🟩 低"] ?? 0,
+        优先级：极高: labelsCount["🟪 极高"] ?? 0,
     };
     const barChart2Data = {
         完成: labelsCount["完成"] ?? 0,
