@@ -105,7 +105,7 @@ const handleReload = () => {
                     color="arcoblue"
                     loading
                     v-if="isLoading.valueOf()"
-                    >正在加载/重载</a-tag
+                    >正在加载</a-tag
                 >
             </template>
             <div id="card1container">
